@@ -1,0 +1,18 @@
+function extractEmailsToSheet() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet1");
+  sheet.clearContents();
+  sheet.appendRow(["Date", "From", "Subject", "Snippet"]);
+
+  const threads = GmailApp.getInboxThreads(0, 10); // it get latest 10 emails
+
+  for (let i = 0; i < threads.length; i++) {
+    const message = threads[i].getMessages()[0]; // it get first message in thread
+    const date = message.getDate();
+    const from = message.getFrom();
+    const subject = message.getSubject();
+    const snippet = message.getPlainBody().substring(0, 100); // it get first 100 characters
+    sheet.appendRow([date, from, subject, snippet]);
+  }
+
+  Logger.log("Emails extracted to Google Sheet.");
+}
